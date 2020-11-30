@@ -51,10 +51,16 @@ class Validate
                                 $this->addError("{$item} is not an email.");
                             }
                         break;
-                        
                         }
+                }else if(empty($value)) {
+                    switch ($rule){
+                        case 'agreement':
+                            if($rule_value == true && $value != 'on'){
+                                $this->addError("{$item} must be checked.");
+                            }
+                        break;
+                    }
                 }
-
             }
             
         }

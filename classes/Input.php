@@ -13,22 +13,14 @@ class Input
                 return false;
             break;
         }
-        /*
-        if(!empty($_POST)){
-            return true;
-        } elseif (!empty($_GET)){
-            return true;
-        }
-        return false;
-        */
     }
 
-    public static function get($item)
+    public static function get($item = null)
     {
         if(isset($_POST[$item])){
-            return $_POST[$item];
+            return ($_POST[$item] == 'on') ? 'checked' : $_POST[$item];
         } elseif(isset($_GET[$item])){
-            return $_GET[$item];
+            return ($_GET[$item] == 'on') ? 'checked' : $_GET[$item];
         }
         
         return '';

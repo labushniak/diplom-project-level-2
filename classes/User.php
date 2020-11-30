@@ -1,7 +1,7 @@
 <?php
 
 class User {
-    private $db = null, $data, $isLoggedIn, $session_name, $cookieName;
+    private $db = null, $data, $isLoggedIn, $session_name, $cookieName, $users_table;
 
 
     public function __construct($user = null)
@@ -9,7 +9,7 @@ class User {
         $this->db = Database::getInstance();
         $this->session_name = Config::get('session.user_session');
         $this->cookieName = Config::get('cookie.cookie_name');
-
+        $this->users_table = Config::get('mysql.users_table');
         if(!$user){
             if(Session::exists($this->session_name)){
                 $user = Session::get($this->session_name); //id
@@ -25,7 +25,7 @@ class User {
 
     public function create($fields = [])
     {
-        $this->db->insert('users_table', $fields);
+        $this->db->insert($this->users_table, $fields);
 
     }
 
@@ -69,9 +69,9 @@ class User {
     {
         
         if(is_numeric($value)){
-            $this->data = $this->db->get('users_table', ['id', '=', $value])->first();
+            $this->data = $this->db->get($this->users_table, ['id', '=', $value])->first();
         }else{
-            $this->data = $this->db->get('users_table', ['email', '=', $value])->first();
+            $this->data = $this->db->get($this->users_table, ['email', '=', $value])->first();
         }
 
         if($this->data){
@@ -109,7 +109,7 @@ class User {
             $id = $this->data()->id;
         }
 
-        $this->db->update('users_table', $id, $fields);
+        $this->db->update($this->users_table, $id, $fields);
 
     }
 
