@@ -129,4 +129,35 @@ class User {
         return false;
 
     }
+
+    public function list($number = 10)
+    {
+        $list = $this->db->get($this->users_table, ['id', '>', 0]);
+        $list->results = array_reverse($list->results);
+        $ids = array_column($list->results, 'id');
+        $usernames = array_column($list->results, 'username');
+        $emails = array_column($list->results, 'email');
+        $dates = array_column($list->results, 'date');
+        
+        $users_list = [];
+        $i = 0;
+        foreach($ids as $key => $id){
+            if ($i < $number){
+                    $date = new DateTime($dates[$key]);
+                    $users_list[$i] = [$ids[$key], $usernames[$key], $emails[$key], $date->format('d/m/Y')];  
+                }
+            $i++;
+            }
+
+        return array_reverse($users_list);
+            
+    }
+
+    public function date()
+    {
+        $date = new DateTime ($this->date);
+        $this->date = $date->format('d/m/Y');
+        return $this->date;
+    }
+    
 }

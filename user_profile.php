@@ -5,7 +5,7 @@ $user = new User;
 
 if($user->isLoggedIn()){
     
-    $link = Output::links(['/users/edit.php', 'logout.php'], $user->data()->id);
+    $link = Output::links(['/users/edit.php','logout.php'], $user->data()->id);
     if($user->hasPermissions('admin')){
         echo 'You are admin';
     }
@@ -13,6 +13,9 @@ if($user->isLoggedIn()){
 } else {
     $link = Output::links(['login.php', 'register.php']);
 }
+
+$anotherUser = new User(Input::get('id'));
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,8 +30,8 @@ if($user->isLoggedIn()){
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-    
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">User Management</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -47,42 +50,33 @@ if($user->isLoggedIn()){
       </div>
     </nav>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="jumbotron">
-          <h1 class="display-4">Привет, мир!</h1>
-          <p class="lead">Это дипломный проект по разработке на PHP. На этой странице список наших пользователей.</p>
-          
-          <?php
-          if(!$user->isLoggedIn()): ?>
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <h1>Данные пользователя</h1>
 
-          <hr class="my-4">
-          <p>Чтобы стать частью нашего проекта вы можете пройти регистрацию.</p>
-          <a class="btn btn-primary btn-lg" href="register.php" role="button">Зарегистрироваться</a>
-          <? endif; ?>
-        </div>
-      </div>
-    </div>
+<?  ?>
+         <table class="table">
+           <thead>
+             <th>ID</th>
+             <th>Имя</th>
+             <th>Дата регистрации</th>
+             <th>Статус</th>
+           </thead>
 
-    <div class="row">
-      <div class="col-md-12">
-        <h1>Пользователи</h1>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Имя</th>
-              <th>Email</th>
-              <th>Дата</th>
-            </tr>
-          </thead>
-          <tbody>
-<? echo Output::users_list($user->list(3)); ?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+           <tbody>
+             <tr>
+               <td><? echo $anotherUser->data()->id ?></td>
+               <td><? echo $anotherUser->data()->username; ?></td>
+               <td><? echo $anotherUser->date(); ?></td>
+               <td><? echo $anotherUser->data()->status; ?></td>
+             </tr>
+           </tbody>
+         </table>
+
+
+       </div>
+     </div>
+   </div>
 </body>
 </html>

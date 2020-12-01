@@ -27,7 +27,7 @@ if (Input::exists()){
             
             if($login){
                 Session::flash('success', 'login success');
-                Redirect::to("index.php");
+                Redirect::to("user_profile.php?id=" . Input::get('id'));
             }else{
                 Session::flash('info', 'Логин или пароль неверны');
             }
