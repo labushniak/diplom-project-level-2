@@ -38,7 +38,7 @@ class User {
             if($user){
                 if(password_verify($password, $this->data()->password)){
                     Session::put(Config::get('session.user_session'), $this->data()->id);
-
+                    
                     if($remember) {
                         $hash = hash('sha256', uniqid());
                         

@@ -21,14 +21,13 @@ if (Input::exists()){
             
             $user = new User;
             
-            $remember = (Input::get('remember')) == 'on' ? true : false;
+            $remember = (Input::get('remember')) == 'checked' ? true : false;
             
             $login = $user->login(Input::get('email'), Input::get('password'), $remember);
             
-            var_dump($login);
-            
             if($login){
                 Session::flash('success', 'login success');
+                Redirect::to("index.php");
             }else{
                 Session::flash('info', 'Логин или пароль неверны');
             }
@@ -47,7 +46,7 @@ if (Input::exists()){
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Register</title>
+    <title>Login</title>
 	
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <!-- Bootstrap core CSS -->
