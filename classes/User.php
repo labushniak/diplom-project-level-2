@@ -130,7 +130,7 @@ class User {
 
     }
 
-    public function list($number = 10)
+    public function list($number = PHP_INT_MAX)
     {
         $list = $this->db->get($this->users_table, ['id', '>', 0]);
         $list->results = array_reverse($list->results);
@@ -138,13 +138,13 @@ class User {
         $usernames = array_column($list->results, 'username');
         $emails = array_column($list->results, 'email');
         $dates = array_column($list->results, 'date');
-        
+        $group_ids = array_column($list->results, 'group_id');
         $users_list = [];
         $i = 0;
         foreach($ids as $key => $id){
             if ($i < $number){
                     $date = new DateTime($dates[$key]);
-                    $users_list[$i] = [$ids[$key], $usernames[$key], $emails[$key], $date->format('d/m/Y')];  
+                    $users_list[$i] = [$ids[$key], $usernames[$key], $emails[$key], $date->format('d/m/Y'), $group_ids[$key]];  
                 }
             $i++;
             }

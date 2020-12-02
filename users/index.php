@@ -3,15 +3,22 @@ require_once '../init.php';
 
 $user = new User;
 
-if($user->isLoggedIn()){
-    
-    $link = Output::links(['/users/edit.php', 'logout.php'], $user->data()->id);
-    if($user->hasPermissions('admin')){
-        echo 'You are admin';
-    }
+if(!$user->isLoggedIn()){
+    Redirect::to('../login.php');
 
 } else {
-    $link = Output::links(['login.php', 'register.php']);
+  
+  //если id страницы и id залогиненого пользователя равны или админ
+  if (Input::get('id') == $user->data()->id || $user->hasPermissions('admin')){
+    
+    $anotherUser = new User(Input::get('id'));
+    
+    $link = Output::links(['/users/edit.php', '/logout.php'], $user->data()->id);
+
+  
+  } else {
+    Redirect::to('../index.php');
+  }
 }
 ?>
 <!doctype html>
@@ -39,9 +46,7 @@ if($user->isLoggedIn()){
           <li class="nav-item">
             <a class="nav-link" href="/">Главная</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/users/index.php">Управление пользователями</a>
-          </li>
+          
         </ul>
 
         <ul class="navbar-nav">
@@ -64,41 +69,7 @@ if($user->isLoggedIn()){
           </thead>
 
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Rahim</td>
-              <td>rahim@marlindev.ru</td>
-              <td>
-              	<a href="#" class="btn btn-success">Назначить администратором</a>
-                <a href="#" class="btn btn-info">Посмотреть</a>
-                <a href="#" class="btn btn-warning">Редактировать</a>
-                <a href="#" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td>2</td>
-              <td>John</td>
-              <td>john@marlindev.ru</td>
-              <td>
-              	<a href="#" class="btn btn-danger">Разжаловать</a>
-                <a href="#" class="btn btn-info">Посмотреть</a>
-                <a href="#" class="btn btn-warning">Редактировать</a>
-                <a href="#" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td>3</td>
-              <td>Jane</td>
-              <td>jane@marlindev.ru</td>
-              <td>
-              	<a href="#" class="btn btn-success">Назначить администратором</a>
-                <a href="#" class="btn btn-info">Посмотреть</a>
-                <a href="#" class="btn btn-warning">Редактировать</a>
-                <a href="#" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
-              </td>
-            </tr>
+              <?php echo Output::users_list($user->list(), true); ?>
           </tbody>
         </table>
       </div>

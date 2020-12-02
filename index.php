@@ -5,10 +5,7 @@ $user = new User;
 
 if($user->isLoggedIn()){
     
-    $link = Output::links(['/users/edit.php', 'logout.php'], $user->data()->id);
-    if($user->hasPermissions('admin')){
-        echo 'You are admin';
-    }
+    $link = Output::links(['/users/edit.php', '/logout.php'], $user->data()->id);
 
 } else {
     $link = Output::links(['login.php', 'register.php']);
@@ -39,10 +36,15 @@ if($user->isLoggedIn()){
           <li class="nav-item">
             <a class="nav-link" href="index.php">Главная</a>
           </li>
+          <?php if($user->hasPermissions('admin')): ?>
+            <li class="nav-item">
+              <a class="nav-link" href="/users/index.php">Управление пользователями</a>
+            </li>
+            <?php endif; ?>
         </ul>
 
         <ul class="navbar-nav">
-        <? echo $link; ?>
+        <?php echo $link; ?>
         </ul>
       </div>
     </nav>
@@ -54,13 +56,12 @@ if($user->isLoggedIn()){
           <h1 class="display-4">Привет, мир!</h1>
           <p class="lead">Это дипломный проект по разработке на PHP. На этой странице список наших пользователей.</p>
           
-          <?php
-          if(!$user->isLoggedIn()): ?>
+          <?php if(!$user->isLoggedIn()): ?>
 
           <hr class="my-4">
           <p>Чтобы стать частью нашего проекта вы можете пройти регистрацию.</p>
           <a class="btn btn-primary btn-lg" href="register.php" role="button">Зарегистрироваться</a>
-          <? endif; ?>
+          <?php endif; ?>
         </div>
       </div>
     </div>
@@ -78,7 +79,7 @@ if($user->isLoggedIn()){
             </tr>
           </thead>
           <tbody>
-<? echo Output::users_list($user->list(3)); ?>
+<?php echo Output::users_list($user->list(3)); ?>
           </tbody>
         </table>
       </div>

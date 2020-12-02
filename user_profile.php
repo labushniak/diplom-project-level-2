@@ -5,10 +5,7 @@ $user = new User;
 
 if($user->isLoggedIn()){
     
-    $link = Output::links(['/users/edit.php','logout.php'], $user->data()->id);
-    if($user->hasPermissions('admin')){
-        echo 'You are admin';
-    }
+    $link = Output::links(['/users/edit.php','/logout.php'], $user->data()->id);
 
 } else {
     $link = Output::links(['login.php', 'register.php']);
@@ -42,6 +39,11 @@ $anotherUser = new User(Input::get('id'));
           <li class="nav-item">
             <a class="nav-link" href="index.php">Главная</a>
           </li>
+          <?php if($user->hasPermissions('admin')): ?>
+            <li class="nav-item">
+              <a class="nav-link" href="/users/index.php">Управление пользователями</a>
+            </li>
+            <?php endif; ?>
         </ul>
 
         <ul class="navbar-nav">
@@ -54,8 +56,6 @@ $anotherUser = new User(Input::get('id'));
      <div class="row">
        <div class="col-md-12">
          <h1>Данные пользователя</h1>
-
-<?  ?>
          <table class="table">
            <thead>
              <th>ID</th>

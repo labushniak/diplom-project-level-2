@@ -3,15 +3,52 @@ require_once '../init.php';
 
 $user = new User;
 
-if($user->isLoggedIn()){
-    
-    $link = Output::links(['/users/edit.php', 'logout.php'], $user->data()->id);
-    if($user->hasPermissions('admin')){
-        echo 'You are admin';
-    }
+
+if(!$user->isLoggedIn()){
+    Redirect::to('../login.php');
 
 } else {
-    $link = Output::links(['login.php', 'register.php']);
+  
+  //если id страницы и id залогиненого пользователя равны или админ
+  if (Input::get('id') == $user->data()->id || $user->hasPermissions('admin')){
+    
+    $anotherUser = new User(Input::get('id'));
+    
+    $link = Output::links(['/users/edit.php', '/logout.php'], $user->data()->id);
+
+    if (Input::exists()){
+      if(Token::check(Input::get('token'))){
+        
+        $validate = new Validate;
+        
+        $validation = $validate->check($_POST, [
+            'username' => [
+                'required' => true,
+                'min' => 5,
+                'max' => 25    
+            ],
+            'status' => [
+                'max' => 130
+            ]
+        ]);
+          
+        if($validation->passed()){
+         
+            $anotherUser->update(['username' => Input::get('username'), 'status' => Input::get('status')], Input::get('id'));
+            
+            Session::flash('success', 'Профиль обновлен');
+            
+            Redirect::to("/users/edit.php?id=" . Input::get("id"));
+            exit;
+        } else {
+          $errors = Output::errors($validation->errors());
+
+        }
+      } 
+    }   
+  } else {
+    Redirect::to('../index.php');
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -39,9 +76,11 @@ if($user->isLoggedIn()){
             <li class="nav-item">
               <a class="nav-link" href="/">Главная</a>
             </li>
+            <?php if($user->hasPermissions('admin')): ?>
             <li class="nav-item">
               <a class="nav-link" href="/users/index.php">Управление пользователями</a>
             </li>
+            <?php endif; ?>
           </ul>
 
           <ul class="navbar-nav">
@@ -53,24 +92,24 @@ if($user->isLoggedIn()){
    <div class="container">
      <div class="row">
        <div class="col-md-8">
-         <h1>Профиль пользователя - Рахим</h1>
-         <div class="alert alert-success">Профиль обновлен</div>
+         <h1>Профиль пользователя - <?php echo $anotherUser->data()->username ?></h1>
          
-         <div class="alert alert-danger">
-           <ul>
-             <li>Ошибка валидации</li>
-           </ul>
-         </div>
-         <form action="" class="form">
+         <?php echo $errors; ?>
+         
+         <? echo Output::message(Session::flash('success'), 'success');?>
+         <ul>
+           <li><a href="/changepassword.php?id=<?php echo Input::get('id') ?>">Изменить пароль</a></li>
+         </ul>
+         <form action="" class="form" method="post">
            <div class="form-group">
              <label for="username">Имя</label>
-             <input type="text" id="username" class="form-control" value="Рахим">
+             <input type="text" id="username" class="form-control" value="<?php echo $anotherUser->data()->username ?>" name = "username">
            </div>
            <div class="form-group">
              <label for="status">Статус</label>
-             <input type="text" id="status" class="form-control" value="Разрабатываю новые проекты)">
+             <input type="text" id="status" class="form-control" value="<?php echo $anotherUser->data()->status ?>" name = "status">
            </div>
-
+           <input type="hidden" class="form-control" id="hidden" name="token" value="<?php echo Token::generate(); ?>">
            <div class="form-group">
              <button class="btn btn-warning">Обновить</button>
            </div>

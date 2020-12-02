@@ -4,7 +4,7 @@ require_once 'init.php';
 //проверка формы
 if (Input::exists()){
     if(Token::check(Input::get('token'))){
-
+            
         $validate = new Validate;
         
         $validation = $validate->check($_POST, [
@@ -27,7 +27,7 @@ if (Input::exists()){
             
             if($login){
                 Session::flash('success', 'login success');
-                Redirect::to("user_profile.php?id=" . Input::get('id'));
+                Redirect::to("user_profile.php");
             }else{
                 Session::flash('info', 'Логин или пароль неверны');
             }

@@ -31,7 +31,7 @@ class Output
         $result = '';
         foreach ($links as $link){
             switch($link){
-                case ('logout.php'):
+                case ('/logout.php'):
                     $result .= "<li class=\"nav-item\"><a href=\"{$link}\" class=\"nav-link\">Выйти</a></li>";
                 break;
 
@@ -52,18 +52,41 @@ class Output
         return $result;
     }
 
-    public static function users_list($users =[])
+    public static function users_list($users =[], $admin = null)
     {
         if($users){
             $list = "";
-            foreach($users as $user){
-                $list .= "<tr>
-                        <td>{$user[0]}</td>
-                        <td><a href=\"user_profile.php?id={$user[0]}\">{$user[1]}</a></td>
-                        <td>{$user[2]}</td>
-                        <td>{$user[3]}</td>
-                    </tr>";
-                        
+            if (!$admin){
+                foreach($users as $user){
+                    $list .= "<tr>
+                            <td>{$user[0]}</td>
+                            <td><a href=\"user_profile.php?id={$user[0]}\">{$user[1]}</a></td>
+                            <td>{$user[2]}</td>
+                            <td>{$user[3]}</td>
+                        </tr>";
+                            
+                }
+            }else{
+                foreach($users as $user){
+                    if($user[4] == 1){
+                        $text_button = "Назначить администратором";
+                        $class = "success";
+                    } else {
+                        $text_button = "Разжаловать";
+                        $class = "danger";
+                    }
+                    $list .= "<tr>
+                            <td>{$user[0]}</td>
+                            <td>{$user[1]}</a></td>
+                            <td>{$user[2]}</td>
+                            <td>
+                                <a href=\"/editgroup.php?id={$user[0]}\" class=\"btn btn-{$class}\">{$text_button}</a>
+                                <a href=\"/user_profile.php?id={$user[0]}\" class=\"btn btn-info\">Посмотреть</a>
+                                <a href=\"/users/edit.php?id={$user[0]}\" class=\"btn btn-warning\">Редактировать</a>
+                                <a href=\"/deleteuser.php?id={$user[0]}\" class=\"btn btn-danger\" onclick=\"return confirm('Вы уверены?');\">Удалить</a>
+                            </td>
+                        </tr>";
+                }
             }
         }
 
