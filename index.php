@@ -79,7 +79,7 @@ if($user->isLoggedIn()){
             </tr>
           </thead>
           <tbody>
-<?php echo Output::users_list($user->list(3)); ?>
+<?php echo Output::users_list($user->list(5)); ?>
           </tbody>
         </table>
       </div>

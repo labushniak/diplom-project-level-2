@@ -26,7 +26,6 @@ class User {
     public function create($fields = [])
     {
         $this->db->insert($this->users_table, $fields);
-
     }
 
     public function login($email = null, $password = null, $remember = false)
@@ -105,7 +104,7 @@ class User {
 
     public function update ($fields =[], $id = null)
     {
-        if(!$id && $this->isLoggedIn()){
+        if(!$id){
             $id = $this->data()->id;
         }
 
@@ -158,6 +157,15 @@ class User {
         $date = new DateTime ($this->date);
         $this->date = $date->format('d/m/Y');
         return $this->date;
+    }
+
+    public function delete($id = null)
+    {
+        if (!$id) {
+            $id = $this->data()->id;
+        } 
+
+        $this->db->delete ($this->users_table, ['id', '=',  $id]);
     }
     
 }

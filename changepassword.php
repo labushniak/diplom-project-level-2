@@ -30,7 +30,7 @@ if(!$user->isLoggedIn()){
         if($validation->passed()){
             
             if(password_verify(Input::get('current_password'), $anotherUser->data()->password)){
-                $anotherUser->update(['password' => password_hash(Input::get('new_password'), PASSWORD_DEFAULT)], Input::get('id'));
+                $anotherUser->update(['password' => password_hash(Input::get('new_password'), PASSWORD_DEFAULT)]);
                 Session::flash('success', 'Пароль обновлен');
                 Redirect::to("changepassword.php?id=" . Input::get("id"));
                 exit;

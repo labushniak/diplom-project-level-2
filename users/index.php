@@ -58,6 +58,8 @@ if(!$user->isLoggedIn()){
     <div class="container">
       <div class="col-md-12">
         <h1>Пользователи</h1>
+        <? echo Output::message(Session::flash('success'), 'success');?>
+        <? echo Output::message(Session::flash('danger'), 'danger');?>
         <table class="table">
           <thead>
             <tr>

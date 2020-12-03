@@ -11,7 +11,7 @@ if (Input::exists()){
             'username' => [
                 'required' => true,
                 'min' => 2,
-                'max' => 15                
+                'max' => 25                
             ],
             'email' => [
                 'required' => true,
@@ -41,7 +41,9 @@ if (Input::exists()){
                 'email' => Input::get('email'),
                 'username' => Input::get('username'),
                 'password' => password_hash(Input::get('password'), PASSWORD_DEFAULT),
-                'date' => date("Y-m-d")
+                'date' => date("Y-m-d"),
+                'group_id' => '1',
+                'status' => 'только зарегистрировался'
             ]);
 
             Session::flash('success', 'register success');

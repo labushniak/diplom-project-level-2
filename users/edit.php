@@ -34,7 +34,7 @@ if(!$user->isLoggedIn()){
           
         if($validation->passed()){
          
-            $anotherUser->update(['username' => Input::get('username'), 'status' => Input::get('status')], Input::get('id'));
+            $anotherUser->update(['username' => Input::get('username'), 'status' => Input::get('status')]);
             
             Session::flash('success', 'Профиль обновлен');
             
